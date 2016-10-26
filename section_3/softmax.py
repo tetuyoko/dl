@@ -11,3 +11,4 @@ a = np.array([1010, 1000, 900])
 y = softmax(a)
 
 print(y)
+print(np.sum(y))
