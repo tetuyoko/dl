@@ -1,4 +1,3 @@
-
 from common.functions import *
 
 class SoftMaxWithLoss:
@@ -9,7 +8,7 @@ class SoftMaxWithLoss:
 
     def forward(self, x, t):
         self.t = t
-        self.y = sofmax(x)
+        self.y = softmax(x)
         self.loss = cross_entropy_error(self.y, self.t)
         return self.loss
 
