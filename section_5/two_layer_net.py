@@ -20,7 +20,7 @@ class TwoLayerNet:
         # レイヤの作成
         self.layers = OrderedDict()
         self.layers['Affine1'] = Affine(self.params['W1'], self.params['b1'])
-        self.layers = Relu()
+        self.layers['Relu1']  = Relu()
         self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])
 
         self.last_layer = SoftmaxWithLoss()
@@ -37,11 +37,42 @@ class TwoLayerNet:
 
     def accuracy(self, x, t):
         y = self.predict(x)
-        return self.last_layer.forward(y, t)
+        y = np.argmax(y, axis=1)
+        if t.ndim != 1 : t = np.argmax(t, axis=1)
+        accuracy = np.sum(y == t) / float(x.shape(0))
+        return accuracy
 
+    # x:入力データ, t:教師データ
+    def numerical_gradient(self, x, t):
+        loss_W = lambda W: self.loss(x, t)
 
+        grads = {}
+        grads['W1'] = numerical_gradient(loss_W, self.params['W1'])
+        grads['b1'] = numerical_gradient(loss_W, self.params['b1'])
+        grads['W2'] = numerical_gradient(loss_W, self.params['W2'])
+        grads['b2'] = numerical_gradient(loss_W, self.params['b2'])
 
-        y = self.predict(x)
-        y = np.argm
+        return grads
 
+    def gradient(self, x, t):
+        # forward
+        self.loss(x, t)
+
+        # backward
+        dout = 1
+        dout = self.last_layer.backward(dout)
+
+        layers = list(self.layers.values())
+        layers.reverse()
+        for layer in layers:
+            dout = layer.backward(dout)
+
+        # 設定
+        grads = {}
+        grads['W1'] = self.layers['Affine1'].dW
+        grads['b1'] = self.layers['Affine1'].db
+        grads['W2'] = self.layers['Affine2'].dW
+        grads['b2'] = self.layers['Affine2'].db
+
+        return grads
 
