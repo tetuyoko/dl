@@ -1,8 +1,10 @@
 # coding: utf-8
+
 import numpy as np
+import sys, os
+sys.path.append(os.pardir)
 from common.functions import *
 from common.util import im2col, col2im
-
 
 class Relu:
     def __init__(self):
