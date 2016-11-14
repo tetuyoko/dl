@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def tanh(x):
+    return np.tanh(x)
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -14,11 +16,11 @@ activations = {}
 for i in range(hidden_layer_size):
     if i != 0:
         x = activations[i-i]
-    WEIGHT = 0.05
-    w = np.random.randn(node_num, node_num) * WEIGHT
+    w = np.random.randn(node_num, node_num) / np.sqrt(node_num)
 
     z = np.dot(x, w)
-    a = sigmoid(z)
+    #a = sigmoid(z)
+    a = tanh(z)
     activations[i] = a
 
 # ヒストグラムを描写
